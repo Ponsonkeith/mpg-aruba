@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Bed, Bath, Maximize, Phone, MessageCircle, Eye, Share2 } from "lucide-react";
-import { getPropertyBySlug, getAllPropertySlugs } from "@/lib/queries/properties";
+import { getPropertyBySlug } from "@/lib/queries/properties";
 import { SAMPLE_PROPERTIES } from "@/lib/sample-data";
 import { formatPriceUSD, formatPriceAWG, formatArea, formatBaths, propertyWhatsappMessage } from "@/lib/utils";
 
@@ -9,11 +9,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const slugs = await getAllPropertySlugs();
-  return slugs.map(slug => ({ slug }));
-}
-
+export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const live   = await getPropertyBySlug(slug);
@@ -21,7 +17,7 @@ export async function generateMetadata({ params }: Props) {
   if (!prop) return { title: "Property Not Found" };
   return {
     title: prop.title,
-    description: `${formatPriceUSD(prop.price_usd)} · ${prop.bedrooms ?? "–"} bed · ${prop.location_text} · MPG Aruba Real Estate`,
+    description: `${formatPriceUSD(prop.price_usd)} Â· ${prop.bedrooms ?? "â€“"} bed Â· ${prop.location_text} Â· MPG Aruba Real Estate`,
     openGraph: { images: prop.primary_image_url ? [prop.primary_image_url] : [] },
   };
 }
@@ -90,9 +86,9 @@ export default async function PropertyDetailPage({ params }: Props) {
           <div className="lg:col-span-2">
             <div className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:"#6b7c8d",letterSpacing:".14em"}}>
               {property.neighborhood_name ?? property.location_text}
-              {property.property_type && ` · ${property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}`}
-              {property.land_type === "long_lease" && " · Long Lease"}
-              {property.land_type === "freehold"   && " · Freehold"}
+              {property.property_type && ` Â· ${property.property_type.charAt(0).toUpperCase() + property.property_type.slice(1)}`}
+              {property.land_type === "long_lease" && " Â· Long Lease"}
+              {property.land_type === "freehold"   && " Â· Freehold"}
             </div>
             <h1 className="font-display mb-4" style={{fontSize:"clamp(24px,4vw,36px)",fontWeight:600,color:"#0d1f2d",lineHeight:1.05}}>
               {property.title}
@@ -131,11 +127,11 @@ export default async function PropertyDetailPage({ params }: Props) {
 
             {/* Feature flags */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {property.pool        && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>✦ Pool</span>}
-              {property.ocean_view  && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>✦ Ocean View</span>}
-              {property.beachfront  && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>✦ Beachfront</span>}
+              {property.pool        && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>âœ¦ Pool</span>}
+              {property.ocean_view  && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>âœ¦ Ocean View</span>}
+              {property.beachfront  && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#fdf7ec",border:"1px solid rgba(201,151,63,.25)",color:"#a07828"}}>âœ¦ Beachfront</span>}
               {property.furnished   && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#f2ede4",border:"1px solid #e4ddd0",color:"#0d1f2d"}}>Furnished</span>}
-              {property.is_luxury   && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"linear-gradient(135deg,#c9973f,#a07828)",color:"#fff"}}>✦ Luxury</span>}
+              {property.is_luxury   && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"linear-gradient(135deg,#c9973f,#a07828)",color:"#fff"}}>âœ¦ Luxury</span>}
               {property.is_investment && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#0d1f2d",color:"#e8b85a"}}>Investment</span>}
               {property.is_new      && <span className="px-3 py-1.5 rounded-full text-xs font-medium" style={{background:"#0d1f2d",color:"#fff"}}>New</span>}
             </div>
@@ -145,12 +141,12 @@ export default async function PropertyDetailPage({ params }: Props) {
             <p className="leading-relaxed mb-6" style={{fontSize:"14px",color:"#6b7c8d",lineHeight:1.8}}>
               {(property as {rewritten_description?:string;summary?:string}).rewritten_description
                 || (property as {summary?:string}).summary
-                || "Full property description available — connect Supabase to load listing content from the database."}
+                || "Full property description available â€” connect Supabase to load listing content from the database."}
             </p>
 
             {isSample && (
               <div className="mb-6 px-4 py-3 rounded-xl text-xs" style={{background:"#fff8e8",border:"1px solid rgba(201,151,63,.3)",borderLeft:"3px solid #c9973f",color:"#6b5000"}}>
-                <strong style={{color:"#4a3800"}}>Sample listing</strong> — Description, agent info, and full specs load from Supabase once connected.
+                <strong style={{color:"#4a3800"}}>Sample listing</strong> â€” Description, agent info, and full specs load from Supabase once connected.
               </div>
             )}
 
@@ -162,7 +158,7 @@ export default async function PropertyDetailPage({ params }: Props) {
               </div>
               <div>
                 <div className="font-semibold text-sm" style={{color:"#0d1f2d"}}>{property.agent_name ?? "MPG Aruba Real Estate"}</div>
-                <div className="text-xs" style={{color:"#6b7c8d"}}>Licensed Real Estate Broker · MPG Aruba</div>
+                <div className="text-xs" style={{color:"#6b7c8d"}}>Licensed Real Estate Broker Â· MPG Aruba</div>
                 {property.agent_phone && <div className="text-xs mt-0.5" style={{color:"#c9973f"}}>{property.agent_phone}</div>}
               </div>
             </div>
@@ -236,3 +232,4 @@ export default async function PropertyDetailPage({ params }: Props) {
     </div>
   );
 }
+

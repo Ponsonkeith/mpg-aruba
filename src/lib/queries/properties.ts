@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+﻿import { createClient } from "@/lib/supabase/server";
 import type { PropertyListing, SearchFilters } from "@/types";
 
 /**
@@ -32,7 +32,7 @@ export async function getActiveListings(
       query = query.eq("neighborhood_id", filters.neighborhood_id);
     }
 
-    // Price range — always sort numerically, never hardcode
+    // Price range â€” always sort numerically, never hardcode
     if (filters.price_min) {
       query = query.gte("price_usd", filters.price_min);
     }
@@ -103,8 +103,7 @@ export async function getPropertyBySlug(slug: string): Promise<PropertyListing |
     const { data, error } = await supabase
       .from("active_listings")
       .select("*")
-      .eq("slug", slug)
-      .single();
+      .eq("slug", slug).limit(1).maybeSingle();
 
     if (error) throw error;
     return data as PropertyListing;
@@ -166,7 +165,7 @@ export async function getAllPropertySlugs(): Promise<string[]> {
 
 /**
  * Insert a lead from any public CTA form.
- * Uses anon client — RLS allows anon insert on leads.
+ * Uses anon client â€” RLS allows anon insert on leads.
  */
 export async function insertLead(lead: {
   full_name: string;
@@ -200,7 +199,7 @@ export async function insertLead(lead: {
 
 /**
  * Track an analytics event (property view, WhatsApp click, etc.)
- * Fire-and-forget — never blocks the UI.
+ * Fire-and-forget â€” never blocks the UI.
  */
 export async function trackEvent(event: {
   event_type: string;
@@ -213,6 +212,7 @@ export async function trackEvent(event: {
     const supabase = await createClient();
     await supabase.from("analytics_events").insert(event);
   } catch {
-    // Silent — analytics must never break the user experience
+    // Silent â€” analytics must never break the user experience
   }
 }
+
